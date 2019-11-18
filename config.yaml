@@ -1,0 +1,3 @@
+evaluate: "/horizontal-pod-autoscaler -mode=evaluate"
+metric: "/horizontal-pod-autoscaler -mode=metric"
+runMode: per-resource
