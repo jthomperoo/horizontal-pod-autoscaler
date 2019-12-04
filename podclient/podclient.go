@@ -70,8 +70,8 @@ func (p *OnDemandPodLister) List(selector labels.Selector) ([]*corev1.Pod, error
 		return nil, err
 	}
 	var podPointers []*corev1.Pod
-	for _, pod := range pods.Items {
-		podPointers = append(podPointers, &pod)
+	for i := 0; i < len(pods.Items); i++ {
+		podPointers = append(podPointers, &pods.Items[i])
 	}
 	return podPointers, nil
 }

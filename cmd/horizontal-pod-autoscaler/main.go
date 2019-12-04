@@ -115,20 +115,15 @@ func getMetrics(stdin io.Reader) {
 	}
 
 	// Create metric gatherer, with required clients and configuration
-	gatherer := metric.Gatherer{
-		MetricsClient: metrics.NewRESTMetricsClient(
-			resourceclient.NewForConfigOrDie(clusterConfig),
-			customclient.NewForConfig(
-				clusterConfig,
-				restmapper.NewDeferredDiscoveryRESTMapper(cacheddiscovery.NewMemCacheClient(clientset.Discovery())),
-				customclient.NewAvailableAPIsGetter(clientset.Discovery()),
-			),
-			externalclient.NewForConfigOrDie(clusterConfig),
+	gatherer := metric.NewGather(metrics.NewRESTMetricsClient(
+		resourceclient.NewForConfigOrDie(clusterConfig),
+		customclient.NewForConfig(
+			clusterConfig,
+			restmapper.NewDeferredDiscoveryRESTMapper(cacheddiscovery.NewMemCacheClient(clientset.Discovery())),
+			customclient.NewAvailableAPIsGetter(clientset.Discovery()),
 		),
-		PodLister:                     &podclient.OnDemandPodLister{Clientset: clientset},
-		CPUInitializationPeriod:       5 * time.Minute,
-		DelayOfInitialReadinessStatus: 30 * time.Second,
-	}
+		externalclient.NewForConfigOrDie(clusterConfig),
+	), &podclient.OnDemandPodLister{Clientset: clientset}, 5*time.Minute, 30*time.Second)
 
 	// Get metrics for deployment
 	metrics, err := gatherer.GetMetrics(&deployment, metricSpecs, deployment.ObjectMeta.Namespace)
@@ -162,7 +157,7 @@ func getEvaluation(stdin io.Reader) {
 		os.Exit(1)
 	}
 
-	var combinedMetrics []*metric.CombinedMetric
+	var combinedMetrics []*metric.Metric
 	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(cpaMetrics[0].Value), 10).Decode(&combinedMetrics)
 	if err != nil {
 		log.Fatal(err)

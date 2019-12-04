@@ -3,6 +3,7 @@ module github.com/jthomperoo/horizontal-pod-autoscaler
 go 1.13
 
 require (
+	github.com/google/go-cmp v0.3.1
 	github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191118114951-03375d40dc2d
 	k8s.io/api v0.0.0
 	k8s.io/apimachinery v0.0.0
@@ -10,6 +11,7 @@ require (
 	k8s.io/kube-state-metrics v1.8.0 // indirect
 	k8s.io/kubernetes v1.15.0
 	k8s.io/metrics v0.0.0
+	sigs.k8s.io/controller-runtime v0.4.0
 )
 
 replace (
