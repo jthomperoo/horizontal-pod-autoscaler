@@ -1,3 +1,5 @@
+[![Build](https://github.com/jthomperoo/horizontal-pod-autoscaler/workflows/main/badge.svg)](https://github.com/jthomperoo/horizontal-pod-autoscaler/actions)
+[![codecov](https://codecov.io/gh/jthomperoo/horizontal-pod-autoscaler/branch/master/graph/badge.svg)](https://codecov.io/gh/jthomperoo/horizontal-pod-autoscaler)
 [![GoDoc](https://godoc.org/github.com/jthomperoo/horizontal-pod-autoscaler?status.svg)](https://godoc.org/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jthomperoo/horizontal-pod-autoscaler)](https://goreportcard.com/report/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
