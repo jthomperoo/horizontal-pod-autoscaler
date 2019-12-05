@@ -47,7 +47,7 @@ type Evaluator struct {
 }
 
 // GetEvaluation takes in metrics and outputs an evaluation decision
-func (e *Evaluator) GetEvaluation(gatheredMetrics []*metric.CombinedMetric) (*evaluate.Evaluation, error) {
+func (e *Evaluator) GetEvaluation(gatheredMetrics []*metric.Metric) (*evaluate.Evaluation, error) {
 	var evaluation *evaluate.Evaluation
 	var invalidEvaluationError error
 	invalidEvaluationsCount := 0
@@ -74,7 +74,7 @@ func (e *Evaluator) GetEvaluation(gatheredMetrics []*metric.CombinedMetric) (*ev
 	return evaluation, nil
 }
 
-func (e *Evaluator) getEvaluation(currentReplicas int32, gatheredMetric *metric.CombinedMetric) (*evaluate.Evaluation, error) {
+func (e *Evaluator) getEvaluation(currentReplicas int32, gatheredMetric *metric.Metric) (*evaluate.Evaluation, error) {
 	switch gatheredMetric.Spec.Type {
 	case autoscaling.ObjectMetricSourceType:
 		return e.getObjectEvaluation(currentReplicas, gatheredMetric)
@@ -89,7 +89,7 @@ func (e *Evaluator) getEvaluation(currentReplicas int32, gatheredMetric *metric.
 	}
 }
 
-func (e *Evaluator) getObjectEvaluation(currentReplicas int32, gatheredMetric *metric.CombinedMetric) (*evaluate.Evaluation, error) {
+func (e *Evaluator) getObjectEvaluation(currentReplicas int32, gatheredMetric *metric.Metric) (*evaluate.Evaluation, error) {
 	if gatheredMetric.Spec.Object.Target.Type == autoscaling.ValueMetricType {
 		usageRatio := float64(gatheredMetric.Object.Utilization) / float64(gatheredMetric.Spec.Object.Target.Value.MilliValue())
 		replicaCount := e.getUsageRatioReplicaCount(currentReplicas, usageRatio, *gatheredMetric.Object.ReadyPodCount)
@@ -112,7 +112,7 @@ func (e *Evaluator) getObjectEvaluation(currentReplicas int32, gatheredMetric *m
 	return nil, fmt.Errorf("invalid object metric source: neither a value target nor an average value target was set")
 }
 
-func (e *Evaluator) getPodsEvaluation(currentReplicas int32, gatheredMetric *metric.CombinedMetric) *evaluate.Evaluation {
+func (e *Evaluator) getPodsEvaluation(currentReplicas int32, gatheredMetric *metric.Metric) *evaluate.Evaluation {
 	targetReplicas := e.getPlainMetricReplicaCount(
 		gatheredMetric.Pods.PodMetricsInfo,
 		currentReplicas,
@@ -126,7 +126,7 @@ func (e *Evaluator) getPodsEvaluation(currentReplicas int32, gatheredMetric *met
 	}
 }
 
-func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric *metric.CombinedMetric) (*evaluate.Evaluation, error) {
+func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric *metric.Metric) (*evaluate.Evaluation, error) {
 	if gatheredMetric.Spec.Resource.Target.AverageValue != nil {
 		replicaCount := e.getPlainMetricReplicaCount(
 			gatheredMetric.Resource.PodMetricsInfo,
@@ -215,7 +215,7 @@ func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric 
 	return nil, fmt.Errorf("invalid resource metric source: neither a utilization target nor a value target was set")
 }
 
-func (e *Evaluator) getExternalEvaluation(currentReplicas int32, gatheredMetric *metric.CombinedMetric) (*evaluate.Evaluation, error) {
+func (e *Evaluator) getExternalEvaluation(currentReplicas int32, gatheredMetric *metric.Metric) (*evaluate.Evaluation, error) {
 	if gatheredMetric.Spec.External.Target.AverageValue != nil {
 		utilization := gatheredMetric.External.Utilization
 		targetUtilizationPerPod := gatheredMetric.Spec.External.Target.AverageValue.MilliValue()
