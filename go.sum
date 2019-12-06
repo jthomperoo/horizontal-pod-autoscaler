@@ -277,6 +277,8 @@ github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191116223539-9b7e2579ef23 h
 github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191116223539-9b7e2579ef23/go.mod h1:xaaiPs4fD7VG4Dfybdv/kUygW+uAM5xB4WsEr9Q/YaM=
 github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191118114951-03375d40dc2d h1:rNJ4tSGaTMqW4hvM04WBe1riOUD9O3/GCuXzqFY8T5U=
 github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191118114951-03375d40dc2d/go.mod h1:xaaiPs4fD7VG4Dfybdv/kUygW+uAM5xB4WsEr9Q/YaM=
+github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191125111105-ac51b89dbdb3 h1:5yWDuvhc9FTvH8YMmGtwe1MR8Hhrky1gdygWQJbKhIs=
+github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191125111105-ac51b89dbdb3/go.mod h1:xaaiPs4fD7VG4Dfybdv/kUygW+uAM5xB4WsEr9Q/YaM=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
 github.com/kardianos/osext v0.0.0-20150410034420-8fef92e41e22/go.mod h1:1NbS8ALrpOvjt0rHPNLyCIeMtbizbir8U//inJ+zuB8=
