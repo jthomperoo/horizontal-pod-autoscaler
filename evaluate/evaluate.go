@@ -62,7 +62,7 @@ func (e *Evaluator) GetEvaluation(gatheredMetrics []*metric.Metric) (*evaluate.E
 			continue
 		}
 		// Mutliple evaluations, take the highest replica count
-		if *proposedEvaluation.TargetReplicas > *evaluation.TargetReplicas {
+		if proposedEvaluation.TargetReplicas > evaluation.TargetReplicas {
 			evaluation = proposedEvaluation
 		}
 	}
@@ -94,7 +94,7 @@ func (e *Evaluator) getObjectEvaluation(currentReplicas int32, gatheredMetric *m
 		usageRatio := float64(gatheredMetric.Object.Utilization) / float64(gatheredMetric.Spec.Object.Target.Value.MilliValue())
 		replicaCount := e.getUsageRatioReplicaCount(currentReplicas, usageRatio, *gatheredMetric.Object.ReadyPodCount)
 		return &evaluate.Evaluation{
-			TargetReplicas: &replicaCount,
+			TargetReplicas: replicaCount,
 		}, nil
 	}
 	if gatheredMetric.Spec.Object.Target.Type == autoscaling.AverageValueMetricType {
@@ -106,7 +106,7 @@ func (e *Evaluator) getObjectEvaluation(currentReplicas int32, gatheredMetric *m
 			replicaCount = int32(math.Ceil(float64(utilization) / float64(gatheredMetric.Spec.Object.Target.AverageValue.MilliValue())))
 		}
 		return &evaluate.Evaluation{
-			TargetReplicas: &replicaCount,
+			TargetReplicas: replicaCount,
 		}, nil
 	}
 	return nil, fmt.Errorf("invalid object metric source: neither a value target nor an average value target was set")
@@ -122,7 +122,7 @@ func (e *Evaluator) getPodsEvaluation(currentReplicas int32, gatheredMetric *met
 		gatheredMetric.Resource.IgnoredPods,
 	)
 	return &evaluate.Evaluation{
-		TargetReplicas: &targetReplicas,
+		TargetReplicas: targetReplicas,
 	}
 }
 
@@ -137,7 +137,7 @@ func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric 
 			gatheredMetric.Resource.IgnoredPods,
 		)
 		return &evaluate.Evaluation{
-			TargetReplicas: &replicaCount,
+			TargetReplicas: replicaCount,
 		}, nil
 	}
 
@@ -159,13 +159,13 @@ func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric 
 			if math.Abs(1.0-usageRatio) <= e.Tolerance {
 				// return the current replicas if the change would be too small
 				return &evaluate.Evaluation{
-					TargetReplicas: &currentReplicas,
+					TargetReplicas: currentReplicas,
 				}, nil
 			}
 			targetReplicas := int32(math.Ceil(usageRatio * float64(readyPodCount)))
 			// if we don't have any unready or missing pods, we can calculate the new replica count now
 			return &evaluate.Evaluation{
-				TargetReplicas: &targetReplicas,
+				TargetReplicas: targetReplicas,
 			}, nil
 		}
 
@@ -200,7 +200,7 @@ func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric 
 			// return the current replicas if the change would be too small,
 			// or if the new usage ratio would cause a change in scale direction
 			return &evaluate.Evaluation{
-				TargetReplicas: &currentReplicas,
+				TargetReplicas: currentReplicas,
 			}, nil
 		}
 
@@ -208,7 +208,7 @@ func (e *Evaluator) getResourceEvaluation(currentReplicas int32, gatheredMetric 
 		// however many replicas factored into our calculation
 		targetReplicas := int32(math.Ceil(newUsageRatio * float64(len(metrics))))
 		return &evaluate.Evaluation{
-			TargetReplicas: &targetReplicas,
+			TargetReplicas: targetReplicas,
 		}, nil
 	}
 
@@ -226,7 +226,7 @@ func (e *Evaluator) getExternalEvaluation(currentReplicas int32, gatheredMetric 
 			replicaCount = int32(math.Ceil(float64(utilization) / float64(targetUtilizationPerPod)))
 		}
 		return &evaluate.Evaluation{
-			TargetReplicas: &replicaCount,
+			TargetReplicas: replicaCount,
 		}, nil
 	}
 
@@ -241,7 +241,7 @@ func (e *Evaluator) getExternalEvaluation(currentReplicas int32, gatheredMetric 
 		usageRatio := float64(utilization) / float64(targetUtilization)
 		replicaCount = e.getUsageRatioReplicaCount(currentReplicas, usageRatio, *readyPodCount)
 		return &evaluate.Evaluation{
-			TargetReplicas: &replicaCount,
+			TargetReplicas: replicaCount,
 		}, nil
 	}
 	return nil, fmt.Errorf("invalid external metric source: neither a value target nor an average value target was set")

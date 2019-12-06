@@ -4,14 +4,14 @@ go 1.13
 
 require (
 	github.com/google/go-cmp v0.3.1
-	github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191118114951-03375d40dc2d
+	github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191125111105-ac51b89dbdb3
 	k8s.io/api v0.0.0
 	k8s.io/apimachinery v0.0.0
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/kube-state-metrics v1.8.0 // indirect
 	k8s.io/kubernetes v1.15.0
 	k8s.io/metrics v0.0.0
-	sigs.k8s.io/controller-runtime v0.4.0
+	sigs.k8s.io/controller-runtime v0.4.0 // indirect
 )
 
 replace (
