@@ -414,7 +414,6 @@ func TestGetMetrics(t *testing.T) {
 			},
 			"test-namespace",
 		},
-
 		{
 			"Single resource metric, invalid target",
 			nil,
@@ -635,15 +634,598 @@ func TestGetMetrics(t *testing.T) {
 			},
 			"test-namespace",
 		},
-
-		// Single external metric, invalid target
-		// Single external metric, average value, fail to get metric
-		// Single external metric, average metric, success
-		// Single external metric, average utilisation, fail to get metric
-		// Single external metric, average utilisation, success
-
-		// One of each metric, 2 success, 2 invalid
-		// One of each metric, all success
+		{
+			"Single external metric, invalid target",
+			nil,
+			errors.New(`invalid metrics (1 invalid out of 1), first error is: invalid external metric source: neither a value target nor an average value target was set`),
+			nil,
+			nil,
+			nil,
+			nil,
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(3),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "test-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							Type: "invalid",
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"Single external metric, average value, fail to get metric",
+			nil,
+			errors.New(`invalid metrics (1 invalid out of 1), first error is: failed to get external metric: fail to get metric`),
+			nil,
+			nil,
+			nil,
+			&fake.ExternalGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector) (*external.Metric, error) {
+					return nil, errors.New("fail to get metric")
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(2),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "test-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"Single external metric, average metric, success",
+			[]*metric.Metric{
+				&metric.Metric{
+					CurrentReplicas: 2,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ExternalMetricSourceType,
+						External: &autoscaling.ExternalMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "test-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+							},
+						},
+					},
+					External: &external.Metric{
+						Utilization:   5,
+						ReadyPodCount: int64Ptr(6),
+					},
+				},
+			},
+			nil,
+			nil,
+			nil,
+			nil,
+			&fake.ExternalGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector) (*external.Metric, error) {
+					return &external.Metric{
+						Utilization:   5,
+						ReadyPodCount: int64Ptr(6),
+					}, nil
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(2),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "test-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"Single external metric, average utilisation, fail to get metric",
+			nil,
+			errors.New(`invalid metrics (1 invalid out of 1), first error is: failed to get external metric: fail to get metric`),
+			nil,
+			nil,
+			nil,
+			&fake.ExternalGatherer{
+				GetMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector, podSelector labels.Selector) (*external.Metric, error) {
+					return nil, errors.New("fail to get metric")
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(7),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "test-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageUtilization: int32Ptr(7),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"Single external metric, average utilisation, success",
+			[]*metric.Metric{
+				&metric.Metric{
+					CurrentReplicas: 7,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ExternalMetricSourceType,
+						External: &autoscaling.ExternalMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "test-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageUtilization: int32Ptr(7),
+							},
+						},
+					},
+					External: &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					},
+				},
+			},
+			nil,
+			nil,
+			nil,
+			nil,
+			&fake.ExternalGatherer{
+				GetMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector, podSelector labels.Selector) (*external.Metric, error) {
+					return &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					}, nil
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(7),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "test-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageUtilization: int32Ptr(7),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"One of each metric, all failure",
+			nil,
+			errors.New(`invalid metrics (4 invalid out of 4), first error is: failed to get external metric: fail to get external metric`),
+			&fake.ResourceGatherer{
+				GetRawMetricReactor: func(resource v1.ResourceName, namespace string, selector labels.Selector) (*resource.Metric, error) {
+					return nil, errors.New("fail to get resource metric")
+				},
+			},
+			&fake.ObjectGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, objectRef *autoscaling.CrossVersionObjectReference, metricSelector labels.Selector) (*object.Metric, error) {
+					return nil, errors.New("fail to get object metric")
+				},
+			},
+			&fake.PodsGatherer{
+				GetMetricReactor: func(metricName, namespace string, selector, metricSelector labels.Selector) (*pods.Metric, error) {
+					return nil, errors.New("fail to get pods metric")
+				},
+			},
+			&fake.ExternalGatherer{
+				GetMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector, podSelector labels.Selector) (*external.Metric, error) {
+					return nil, errors.New("fail to get external metric")
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(4),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "external-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageUtilization: int32Ptr(3),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.PodsMetricSourceType,
+					Pods: &autoscaling.PodsMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "pods-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(2, k8sresource.DecimalSI),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ObjectMetricSourceType,
+					Object: &autoscaling.ObjectMetricSource{
+						Target: autoscaling.MetricTarget{
+							Type: autoscaling.AverageValueMetricType,
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ResourceMetricSourceType,
+					Resource: &autoscaling.ResourceMetricSource{
+						Name: "test-resource",
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"One of each metric, 2 success, 2 invalid",
+			[]*metric.Metric{
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ExternalMetricSourceType,
+						External: &autoscaling.ExternalMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "external-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageUtilization: int32Ptr(3),
+							},
+						},
+					},
+					External: &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					},
+				},
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.PodsMetricSourceType,
+						Pods: &autoscaling.PodsMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "pods-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageValue: k8sresource.NewMilliQuantity(2, k8sresource.DecimalSI),
+							},
+						},
+					},
+					Pods: &pods.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						ReadyPodCount:  3,
+						IgnoredPods: sets.String{
+							"ignored-pod": {},
+						},
+						MissingPods: sets.String{
+							"missing-pod": {},
+						},
+						TotalPods: 5,
+					},
+				},
+			},
+			nil,
+			&fake.ResourceGatherer{
+				GetRawMetricReactor: func(resource v1.ResourceName, namespace string, selector labels.Selector) (*resource.Metric, error) {
+					return nil, errors.New("fail to get resource metric")
+				},
+			},
+			&fake.ObjectGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, objectRef *autoscaling.CrossVersionObjectReference, metricSelector labels.Selector) (*object.Metric, error) {
+					return nil, errors.New("fail to get object metric")
+				},
+			},
+			&fake.PodsGatherer{
+				GetMetricReactor: func(metricName, namespace string, selector, metricSelector labels.Selector) (*pods.Metric, error) {
+					return &pods.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						ReadyPodCount:  3,
+						IgnoredPods: sets.String{
+							"ignored-pod": {},
+						},
+						MissingPods: sets.String{
+							"missing-pod": {},
+						},
+						TotalPods: 5,
+					}, nil
+				},
+			},
+			&fake.ExternalGatherer{
+				GetMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector, podSelector labels.Selector) (*external.Metric, error) {
+					return &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					}, nil
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(4),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "external-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageUtilization: int32Ptr(3),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.PodsMetricSourceType,
+					Pods: &autoscaling.PodsMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "pods-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(2, k8sresource.DecimalSI),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ObjectMetricSourceType,
+					Object: &autoscaling.ObjectMetricSource{
+						Target: autoscaling.MetricTarget{
+							Type: autoscaling.AverageValueMetricType,
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ResourceMetricSourceType,
+					Resource: &autoscaling.ResourceMetricSource{
+						Name: "test-resource",
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"One of each metric, all success",
+			[]*metric.Metric{
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ExternalMetricSourceType,
+						External: &autoscaling.ExternalMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "external-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageUtilization: int32Ptr(3),
+							},
+						},
+					},
+					External: &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					},
+				},
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.PodsMetricSourceType,
+						Pods: &autoscaling.PodsMetricSource{
+							Metric: autoscaling.MetricIdentifier{
+								Name:     "pods-metric",
+								Selector: &metav1.LabelSelector{},
+							},
+							Target: autoscaling.MetricTarget{
+								AverageValue: k8sresource.NewMilliQuantity(2, k8sresource.DecimalSI),
+							},
+						},
+					},
+					Pods: &pods.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						ReadyPodCount:  3,
+						IgnoredPods: sets.String{
+							"ignored-pod": {},
+						},
+						MissingPods: sets.String{
+							"missing-pod": {},
+						},
+						TotalPods: 5,
+					},
+				},
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ObjectMetricSourceType,
+						Object: &autoscaling.ObjectMetricSource{
+							Target: autoscaling.MetricTarget{
+								Type: autoscaling.AverageValueMetricType,
+							},
+						},
+					},
+					Object: &object.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(6),
+					},
+				},
+				&metric.Metric{
+					CurrentReplicas: 4,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ResourceMetricSourceType,
+						Resource: &autoscaling.ResourceMetricSource{
+							Name: "test-resource",
+							Target: autoscaling.MetricTarget{
+								AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+							},
+						},
+					},
+					Resource: &resource.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						Requests:       map[string]int64{"pod-1": 1, "pod-2": 3, "pod-3": 4},
+						ReadyPodCount:  4,
+						TotalPods:      6,
+						IgnoredPods:    sets.String{"pod-1": {}},
+						MissingPods:    sets.String{"pod-3": {}},
+					},
+				},
+			},
+			nil,
+			&fake.ResourceGatherer{
+				GetRawMetricReactor: func(res v1.ResourceName, namespace string, selector labels.Selector) (*resource.Metric, error) {
+					return &resource.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						Requests:       map[string]int64{"pod-1": 1, "pod-2": 3, "pod-3": 4},
+						ReadyPodCount:  4,
+						TotalPods:      6,
+						IgnoredPods:    sets.String{"pod-1": {}},
+						MissingPods:    sets.String{"pod-3": {}},
+					}, nil
+				},
+			},
+			&fake.ObjectGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, objectRef *autoscaling.CrossVersionObjectReference, metricSelector labels.Selector) (*object.Metric, error) {
+					return &object.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(6),
+					}, nil
+				},
+			},
+			&fake.PodsGatherer{
+				GetMetricReactor: func(metricName, namespace string, selector, metricSelector labels.Selector) (*pods.Metric, error) {
+					return &pods.Metric{
+						PodMetricsInfo: metricsclient.PodMetricsInfo{},
+						ReadyPodCount:  3,
+						IgnoredPods: sets.String{
+							"ignored-pod": {},
+						},
+						MissingPods: sets.String{
+							"missing-pod": {},
+						},
+						TotalPods: 5,
+					}, nil
+				},
+			},
+			&fake.ExternalGatherer{
+				GetMetricReactor: func(metricName, namespace string, metricSelector *metav1.LabelSelector, podSelector labels.Selector) (*external.Metric, error) {
+					return &external.Metric{
+						Utilization:   2,
+						ReadyPodCount: int64Ptr(3),
+					}, nil
+				},
+			},
+			&appsv1.Deployment{
+				Spec: appsv1.DeploymentSpec{
+					Replicas: int32Ptr(4),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: autoscaling.ExternalMetricSourceType,
+					External: &autoscaling.ExternalMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "external-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageUtilization: int32Ptr(3),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.PodsMetricSourceType,
+					Pods: &autoscaling.PodsMetricSource{
+						Metric: autoscaling.MetricIdentifier{
+							Name:     "pods-metric",
+							Selector: &metav1.LabelSelector{},
+						},
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(2, k8sresource.DecimalSI),
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ObjectMetricSourceType,
+					Object: &autoscaling.ObjectMetricSource{
+						Target: autoscaling.MetricTarget{
+							Type: autoscaling.AverageValueMetricType,
+						},
+					},
+				},
+				autoscaling.MetricSpec{
+					Type: autoscaling.ResourceMetricSourceType,
+					Resource: &autoscaling.ResourceMetricSource{
+						Name: "test-resource",
+						Target: autoscaling.MetricTarget{
+							AverageValue: k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {

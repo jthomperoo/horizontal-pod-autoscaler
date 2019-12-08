@@ -145,20 +145,20 @@ func getMetrics(stdin io.Reader) {
 
 func getEvaluation(stdin io.Reader) {
 
-	var cpaMetrics []*cpametric.Metric
-	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&cpaMetrics)
+	var resourceMetrics cpametric.ResourceMetrics
+	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&resourceMetrics)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
-	if len(cpaMetrics) != 1 {
-		log.Fatalf("Expected 1 CPA metric, got %d", len(cpaMetrics))
+	if len(resourceMetrics.Metrics) != 1 {
+		log.Fatalf("Expected 1 CPA metric, got %d", len(resourceMetrics.Metrics))
 		os.Exit(1)
 	}
 
 	var combinedMetrics []*metric.Metric
-	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(cpaMetrics[0].Value), 10).Decode(&combinedMetrics)
+	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(resourceMetrics.Metrics[0].Value), 10).Decode(&combinedMetrics)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)

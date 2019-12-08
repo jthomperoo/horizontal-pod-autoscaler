@@ -26,8 +26,15 @@ jobs:
         make vendor
         make lint
         make unittest
-        # Test build
-        make
+
+        # Build
+        if [ ${{ github.event_name }} == "release" ]; then
+          # github.ref is in the form refs/tags/VERSION, so apply regex to just get version
+          VERSION=$(echo "${{ github.ref }}" | grep -P '([^\/]+$)' -o) 
+        else
+          VERSION=$(git rev-parse --short ${{ github.sha }})
+        fi
+        make docker VERSION=${VERSION}
     - uses: codecov/codecov-action@v1.0.3
       if: github.repository == 'jthomperoo/horizontal-pod-autoscaler'
       with:
@@ -35,3 +42,21 @@ jobs:
         file: ./unit_cover.out
         flags: unittests
         name: horizontal-pod-autoscaler-unittests
+    - name: Deploy
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+      if: github.event_name != 'pull_request' && github.repository == 'jthomperoo/horizontal-pod-autoscaler'
+      run: |
+        if [ ${{ github.event_name }} == "release" ]; then
+          # github.ref is in the form refs/tags/VERSION, so apply regex to just get version
+          VERSION=$(echo "${{ github.ref }}" | grep -P '([^\/]+$)' -o) 
+        else
+          VERSION=$(git rev-parse --short ${{ github.sha }})
+        fi
+        echo "$DOCKER_PASS" | docker login --username=$DOCKER_USER --password-stdin
+        docker push jthomperoo/horizontal-pod-autoscaler:${VERSION}
+        if [ ${{ github.event_name }} == "release" ]; then
+          docker tag jthomperoo/horizontal-pod-autoscaler:${VERSION} jthomperoo/horizontal-pod-autoscaler:latest
+          docker push jthomperoo/horizontal-pod-autoscaler:latest
+        fi

@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/google/go-cmp v0.3.1
-	github.com/jthomperoo/custom-pod-autoscaler v0.0.0-20191125111105-ac51b89dbdb3
+	github.com/jthomperoo/custom-pod-autoscaler v0.7.0
 	k8s.io/api v0.0.0
 	k8s.io/apimachinery v0.0.0
 	k8s.io/client-go v11.0.0+incompatible

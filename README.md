@@ -60,7 +60,7 @@ The Custom Pod Autoscaler Operator provisions all required Kubernetes resources,
 
 ## Example
 
-There is an example of how to use the Custom Pod Autoscaler - Horizontal Pod Autoscaler in `/example`. The example has a simple deployment, taken from the [Kubernetes Horizontal Pod Autoscaler walkthrough](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/). The example also contains the YAML defintion of the CPA-HPA.
+There is an example of how to use the Custom Pod Autoscaler - Horizontal Pod Autoscaler in `/example`. The example has a simple deployment, taken from the [Kubernetes Horizontal Pod Autoscaler walkthrough](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/). The example also contains the YAML definition of the CPA-HPA.
 
 ## Developing this project
 ### Environment
