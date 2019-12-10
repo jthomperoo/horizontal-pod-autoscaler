@@ -32,6 +32,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -50,6 +51,12 @@ import (
 	resourceclient "k8s.io/metrics/pkg/client/clientset/versioned/typed/metrics/v1beta1"
 	customclient "k8s.io/metrics/pkg/client/custom_metrics"
 	externalclient "k8s.io/metrics/pkg/client/external_metrics"
+)
+
+const (
+	defaultTolerance               = float64(0.1)
+	defaultCPUInitializationPeriod = 5
+	defaultInitialReadinessDelay   = 30
 )
 
 func main() {
@@ -100,6 +107,36 @@ func getMetrics(stdin io.Reader) {
 		os.Exit(1)
 	}
 
+	// Get initial readiness delay, can be set as a configuration variable
+	var initialReadinessDelay int64
+	initialReadinessDelayValue, exists := os.LookupEnv("initialReadinessDelay")
+	if !exists {
+		// use default
+		initialReadinessDelay = defaultInitialReadinessDelay
+	} else {
+		// try to parse provided value
+		initialReadinessDelay, err = strconv.ParseInt(initialReadinessDelayValue, 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid initial readiness delay provided - %e\n", err)
+			os.Exit(1)
+		}
+	}
+
+	// Get CPU initialization period, can be set as a configuration variable
+	var cpuInitializationPeriod int64
+	cpuInitializationPeriodValue, exists := os.LookupEnv("cpuInitializationPeriod")
+	if !exists {
+		// use default
+		cpuInitializationPeriod = defaultCPUInitializationPeriod
+	} else {
+		// try to parse provided value
+		cpuInitializationPeriod, err = strconv.ParseInt(cpuInitializationPeriodValue, 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid CPU initialization period provided - %e\n", err)
+			os.Exit(1)
+		}
+	}
+
 	// Create the in-cluster Kubernetes config
 	clusterConfig, err := rest.InClusterConfig()
 	if err != nil {
@@ -123,7 +160,7 @@ func getMetrics(stdin io.Reader) {
 			customclient.NewAvailableAPIsGetter(clientset.Discovery()),
 		),
 		externalclient.NewForConfigOrDie(clusterConfig),
-	), &podclient.OnDemandPodLister{Clientset: clientset}, 5*time.Minute, 30*time.Second)
+	), &podclient.OnDemandPodLister{Clientset: clientset}, time.Duration(cpuInitializationPeriod)*time.Minute, time.Duration(initialReadinessDelay)*time.Second)
 
 	// Get metrics for deployment
 	metrics, err := gatherer.GetMetrics(&deployment, metricSpecs, deployment.ObjectMeta.Namespace)
@@ -144,7 +181,6 @@ func getMetrics(stdin io.Reader) {
 }
 
 func getEvaluation(stdin io.Reader) {
-
 	var resourceMetrics cpametric.ResourceMetrics
 	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&resourceMetrics)
 	if err != nil {
@@ -157,6 +193,21 @@ func getEvaluation(stdin io.Reader) {
 		os.Exit(1)
 	}
 
+	// Get tolerance, can be set as a configuration variable
+	var tolerance float64
+	toleranceValue, exists := os.LookupEnv("tolerance")
+	if !exists {
+		// use default
+		tolerance = defaultTolerance
+	} else {
+		// try to parse provided value
+		tolerance, err = strconv.ParseFloat(toleranceValue, 64)
+		if err != nil {
+			log.Fatalf("Invalid tolerance provided - %e\n", err)
+			os.Exit(1)
+		}
+	}
+
 	var combinedMetrics []*metric.Metric
 	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(resourceMetrics.Metrics[0].Value), 10).Decode(&combinedMetrics)
 	if err != nil {
@@ -164,7 +215,7 @@ func getEvaluation(stdin io.Reader) {
 		os.Exit(1)
 	}
 
-	evaluator := evaluate.Evaluator{}
+	evaluator := evaluate.NewEvaluate(tolerance)
 	evaluation, err := evaluator.GetEvaluation(combinedMetrics)
 	if err != nil {
 		log.Fatal(err)

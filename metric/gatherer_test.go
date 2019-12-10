@@ -1247,7 +1247,7 @@ func TestGetMetrics(t *testing.T) {
 	}
 }
 
-func TestNewGatherer(t *testing.T) {
+func TestNewGather(t *testing.T) {
 	var tests = []struct {
 		description                   string
 		expected                      metric.Gatherer
