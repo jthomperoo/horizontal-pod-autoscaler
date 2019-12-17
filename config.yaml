@@ -1,3 +1,9 @@
-evaluate: "/horizontal-pod-autoscaler -mode=evaluate"
-metric: "/horizontal-pod-autoscaler -mode=metric"
+evaluate: 
+  type: "shell"
+  timeout: 5000
+  shell: "/horizontal-pod-autoscaler -mode=evaluate"
+metric:
+  type: "shell"
+  timeout: 5000
+  shell: "/horizontal-pod-autoscaler -mode=metric"
 runMode: per-resource
