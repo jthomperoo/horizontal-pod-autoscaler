@@ -9,14 +9,8 @@ spec:
   selector:
     matchLabels:
       run: php-apache
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         run: php-apache
     spec:

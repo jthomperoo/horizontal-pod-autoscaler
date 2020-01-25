@@ -64,10 +64,26 @@ func TestGetMetrics(t *testing.T) {
 		object      object.Gatherer
 		pods        pods.Gatherer
 		external    external.Gatherer
-		deployment  *appsv1.Deployment
+		deployment  metav1.Object
 		specs       []autoscaling.MetricSpec
 		namespace   string
 	}{
+		{
+			"Single invalid resource type",
+			nil,
+			errors.New(`Unsupported resource of type *v1.DaemonSet`),
+			nil,
+			nil,
+			nil,
+			nil,
+			&appsv1.DaemonSet{},
+			[]autoscaling.MetricSpec{
+				autoscaling.MetricSpec{
+					Type: "invalid",
+				},
+			},
+			"test-namespace",
+		},
 		{
 			"Single unknown metric type",
 			nil,
@@ -174,7 +190,7 @@ func TestGetMetrics(t *testing.T) {
 			"test-namespace",
 		},
 		{
-			"Single object metric, value metric, success",
+			"Single object metric, deployment, value metric, success",
 			[]*metric.Metric{
 				&metric.Metric{
 					CurrentReplicas: 1,
@@ -222,7 +238,7 @@ func TestGetMetrics(t *testing.T) {
 			"test-namespace",
 		},
 		{
-			"Single object metric, average value metric, fail to get metric",
+			"Single object metric, replicaset, average value metric, fail to get metric",
 			nil,
 			errors.New("invalid metrics (1 invalid out of 1), first error is: failed to get object metric: fail to get object metric"),
 			nil,
@@ -233,8 +249,8 @@ func TestGetMetrics(t *testing.T) {
 			},
 			nil,
 			nil,
-			&appsv1.Deployment{
-				Spec: appsv1.DeploymentSpec{
+			&appsv1.ReplicaSet{
+				Spec: appsv1.ReplicaSetSpec{
 					Replicas: int32Ptr(1),
 				},
 			},
@@ -251,7 +267,7 @@ func TestGetMetrics(t *testing.T) {
 			"test-namespace",
 		},
 		{
-			"Single object metric, average value metric, success",
+			"Single object metric, statefulset, average value metric, success",
 			[]*metric.Metric{
 				&metric.Metric{
 					CurrentReplicas: 3,
@@ -281,8 +297,8 @@ func TestGetMetrics(t *testing.T) {
 			},
 			nil,
 			nil,
-			&appsv1.Deployment{
-				Spec: appsv1.DeploymentSpec{
+			&appsv1.StatefulSet{
+				Spec: appsv1.StatefulSetSpec{
 					Replicas: int32Ptr(3),
 				},
 			},
@@ -359,7 +375,7 @@ func TestGetMetrics(t *testing.T) {
 			"test-namespace",
 		},
 		{
-			"Single pods metric, success",
+			"Single pods metric, replicationcontroller, success",
 			[]*metric.Metric{
 				&metric.Metric{
 					CurrentReplicas: 8,
@@ -397,8 +413,8 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			nil,
-			&appsv1.Deployment{
-				Spec: appsv1.DeploymentSpec{
+			&v1.ReplicationController{
+				Spec: v1.ReplicationControllerSpec{
 					Replicas: int32Ptr(8),
 				},
 			},
