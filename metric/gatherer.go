@@ -40,6 +40,7 @@ import (
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric/resource"
 	appsv1 "k8s.io/api/apps/v1"
 	autoscaling "k8s.io/api/autoscaling/v2beta2"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	corelisters "k8s.io/client-go/listers/core/v1"
@@ -48,7 +49,7 @@ import (
 
 // Gatherer allows retrieval of metrics.
 type Gatherer interface {
-	GetMetrics(deployment *appsv1.Deployment, specs []autoscaling.MetricSpec, namespace string) ([]*Metric, error)
+	GetMetrics(resource metav1.Object, specs []autoscaling.MetricSpec, namespace string) ([]*Metric, error)
 }
 
 // Metric represents a metric that has been gathered using a MetricSpec, it can be any of the types of
@@ -107,16 +108,20 @@ func NewGather(
 
 // GetMetrics processes each MetricSpec provided, calculating metric values for each and combining them into a slice before returning them.
 // Error will only be returned if all metrics are invalid, otherwise it will return the valid metrics.
-func (c *Gather) GetMetrics(deployment *appsv1.Deployment, specs []autoscaling.MetricSpec, namespace string) ([]*Metric, error) {
+func (c *Gather) GetMetrics(resource metav1.Object, specs []autoscaling.MetricSpec, namespace string) ([]*Metric, error) {
 	var combinedMetrics []*Metric
 	var invalidMetricError error
 	invalidMetricsCount := 0
 	currentReplicas := int32(0)
-	if deployment.Spec.Replicas != nil {
-		currentReplicas = *deployment.Spec.Replicas
+	resourceReplicas, err := c.getReplicaCount(resource)
+	if err != nil {
+		return nil, err
+	}
+	if resourceReplicas != nil {
+		currentReplicas = *resourceReplicas
 	}
 	for _, spec := range specs {
-		metric, err := c.getMetric(currentReplicas, spec, namespace, labels.Set(deployment.Labels).AsSelector())
+		metric, err := c.getMetric(currentReplicas, spec, namespace, labels.Set(resource.GetLabels()).AsSelector())
 		if err != nil {
 			if invalidMetricsCount <= 0 {
 				invalidMetricError = err
@@ -239,5 +244,20 @@ func (c *Gather) getMetric(currentReplicas int32, spec autoscaling.MetricSpec, n
 
 	default:
 		return nil, fmt.Errorf("unknown metric source type %q", string(spec.Type))
+	}
+}
+
+func (c *Gather) getReplicaCount(resource metav1.Object) (*int32, error) {
+	switch v := resource.(type) {
+	case *appsv1.Deployment:
+		return v.Spec.Replicas, nil
+	case *appsv1.ReplicaSet:
+		return v.Spec.Replicas, nil
+	case *appsv1.StatefulSet:
+		return v.Spec.Replicas, nil
+	case *corev1.ReplicationController:
+		return v.Spec.Replicas, nil
+	default:
+		return nil, fmt.Errorf("Unsupported resource of type %T", v)
 	}
 }
