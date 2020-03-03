@@ -18,3 +18,5 @@ runMode: per-resource
 # Default values, matching K8s Horizontal Pod Autoscaler defaults
 downscaleStabilization: 300
 interval: 15000
+minReplicas: 1
+maxReplicas: 10
