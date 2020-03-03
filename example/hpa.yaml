@@ -57,5 +57,3 @@ spec:
             target:
               type: Utilization
               averageUtilization: 50
-    - name: interval
-      value: "10000"
