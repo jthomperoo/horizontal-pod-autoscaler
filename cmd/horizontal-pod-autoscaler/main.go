@@ -57,9 +57,11 @@ import (
 )
 
 const (
-	defaultTolerance               = float64(0.1)
-	defaultCPUInitializationPeriod = 5
-	defaultInitialReadinessDelay   = 30
+	defaultTolerance = float64(0.1)
+	// 5 minute CPU initialization period
+	defaultCPUInitializationPeriod = 300
+	// 30 second initial readiness delay
+	defaultInitialReadinessDelay = 30
 )
 
 // EvaluateSpec represents the information fed to the evaluator
@@ -194,7 +196,7 @@ func getMetrics(stdin io.Reader) {
 			customclient.NewAvailableAPIsGetter(clientset.Discovery()),
 		),
 		externalclient.NewForConfigOrDie(clusterConfig),
-	), &podclient.OnDemandPodLister{Clientset: clientset}, time.Duration(cpuInitializationPeriod)*time.Minute, time.Duration(initialReadinessDelay)*time.Second)
+	), &podclient.OnDemandPodLister{Clientset: clientset}, time.Duration(cpuInitializationPeriod)*time.Second, time.Duration(initialReadinessDelay)*time.Second)
 
 	// Get metrics for deployment
 	metrics, err := gatherer.GetMetrics(spec.Resource, metricSpecs, spec.Resource.GetNamespace())

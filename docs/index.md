@@ -36,7 +36,7 @@ There is some overlap in functionality between the the CPA and HPA, in this proj
 Deciding which metrics to use is done by using `MetricSpecs`, which are a key part of HPAs, and look like this:
 ```yaml
 - type: Resource
-  resource:
+    resource:
     name: cpu
     target:
         type: Utilization
@@ -48,11 +48,11 @@ config:
   - name: metrics
     value: |
       - type: Resource
-        resource:
+          resource:
           name: cpu
           target:
-            type: Utilization
-            averageUtilization: 50
+              type: Utilization
+              averageUtilization: 50
 ```
 
 ### RBAC permissions
@@ -61,24 +61,4 @@ The Custom Pod Autoscaler Operator provisions all required Kubernetes resources,
 
 ## Example
 
-There is an example of how to use the Custom Pod Autoscaler - Horizontal Pod Autoscaler in [`/example`](./example). The example has a simple deployment, taken from the [Kubernetes Horizontal Pod Autoscaler walkthrough](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/). The example also contains the YAML definition of the CPA-HPA.
-
-## More information
-
-See the [wiki for more information, such as guides and references](https://horizontal-pod-autoscaler.readthedocs.io/en/latest/).
-
-## Developing this project
-### Environment
-Developing this project requires these dependencies:
-
-* Go >= 1.13
-* Golint
-* Docker
-
-### Commands
-
-* `make` - builds the CPA-HPA binary.
-* `make docker` - builds the CPA-HPA image.
-* `make lint` - lints the code.
-* `make vendor` - generates a vendor folder.
-* `make doc` - hosts the documentation locally, at `127.0.0.1:8000`.
+There is an example of how to use the Custom Pod Autoscaler - Horizontal Pod Autoscaler in `/example`. The example has a simple deployment, taken from the [Kubernetes Horizontal Pod Autoscaler walkthrough](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/). The example also contains the YAML definition of the CPA-HPA.

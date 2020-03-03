@@ -1,0 +1,14 @@
+site_name: Custom Pod Autoscaler Horizontal Pod Autoscaler
+theme: readthedocs
+nav:
+- Home: 'index.md'
+- 'User Guide':
+  - Metrics: 'user-guide/metrics.md'
+  - 'Sync Period': 'user-guide/sync-period.md'
+  - 'Downscale Stabilization': 'user-guide/downscale-stabilization.md'
+  - 'Minimum and Maximum Replicas': 'user-guide/min-max-replicas.md'
+  - 'Initial Readiness Delay': 'user-guide/initial-readiness-delay.md'
+  - 'CPU Initialization Period': 'user-guide/cpu-initialization-period.md'
+  - Tolerance: 'user-guide/tolerance.md'
+- Reference:
+  - Configuration: 'reference/configuration.md'
