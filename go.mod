@@ -7,7 +7,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20190129154638-5b532d6fd5ef // indirect
 	github.com/google/go-cmp v0.3.1
 	github.com/json-iterator/go v1.1.7 // indirect
-	github.com/jthomperoo/custom-pod-autoscaler v0.10.0
+	github.com/jthomperoo/custom-pod-autoscaler v0.11.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect

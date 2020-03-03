@@ -62,6 +62,21 @@ const (
 	defaultInitialReadinessDelay   = 30
 )
 
+// EvaluateSpec represents the information fed to the evaluator
+type EvaluateSpec struct {
+	Metrics              []*cpametric.Metric       `json:"metrics"`
+	UnstructuredResource unstructured.Unstructured `json:"resource"`
+	Resource             metav1.Object             `json:"-"`
+	RunType              string                    `json:"runType"`
+}
+
+// MetricSpec represents the information fed to the metric gatherer
+type MetricSpec struct {
+	UnstructuredResource unstructured.Unstructured `json:"resource"`
+	Resource             metav1.Object             `json:"-"`
+	RunType              string                    `json:"runType"`
+}
+
 func main() {
 	stdin, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
@@ -84,16 +99,15 @@ func main() {
 }
 
 func getMetrics(stdin io.Reader) {
-	// Get piped value as unstructured k8s resource
-	var unstructuredResource unstructured.Unstructured
-	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&unstructuredResource)
+	var spec MetricSpec
+	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&spec)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
 	// Create object from version and kind of piped value
-	resourceGVK := unstructuredResource.GroupVersionKind()
+	resourceGVK := spec.UnstructuredResource.GroupVersionKind()
 	resourceRuntime, err := scheme.Scheme.New(resourceGVK)
 	if err != nil {
 		log.Fatal(err)
@@ -101,12 +115,12 @@ func getMetrics(stdin io.Reader) {
 	}
 
 	// Parse the unstructured k8s resource into the object created, then convert to generic metav1.Object
-	err = runtime.DefaultUnstructuredConverter.FromUnstructured(unstructuredResource.Object, resourceRuntime)
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(spec.UnstructuredResource.Object, resourceRuntime)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-	resource := resourceRuntime.(metav1.Object)
+	spec.Resource = resourceRuntime.(metav1.Object)
 
 	metricSpecsValue, exists := os.LookupEnv("metrics")
 	if !exists {
@@ -183,7 +197,7 @@ func getMetrics(stdin io.Reader) {
 	), &podclient.OnDemandPodLister{Clientset: clientset}, time.Duration(cpuInitializationPeriod)*time.Minute, time.Duration(initialReadinessDelay)*time.Second)
 
 	// Get metrics for deployment
-	metrics, err := gatherer.GetMetrics(resource, metricSpecs, resource.GetNamespace())
+	metrics, err := gatherer.GetMetrics(spec.Resource, metricSpecs, spec.Resource.GetNamespace())
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
@@ -201,17 +215,28 @@ func getMetrics(stdin io.Reader) {
 }
 
 func getEvaluation(stdin io.Reader) {
-	var resourceMetrics cpametric.ResourceMetrics
-	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&resourceMetrics)
+	var spec EvaluateSpec
+	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&spec)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
-	if len(resourceMetrics.Metrics) != 1 {
-		log.Fatalf("Expected 1 CPA metric, got %d", len(resourceMetrics.Metrics))
+	// Create object from version and kind of piped value
+	resourceGVK := spec.UnstructuredResource.GroupVersionKind()
+	resourceRuntime, err := scheme.Scheme.New(resourceGVK)
+	if err != nil {
+		log.Fatal(err)
 		os.Exit(1)
 	}
+
+	// Parse the unstructured k8s resource into the object created, then convert to generic metav1.Object
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(spec.UnstructuredResource.Object, resourceRuntime)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	spec.Resource = resourceRuntime.(metav1.Object)
 
 	// Get tolerance, can be set as a configuration variable
 	var tolerance float64
@@ -229,7 +254,7 @@ func getEvaluation(stdin io.Reader) {
 	}
 
 	var combinedMetrics []*metric.Metric
-	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(resourceMetrics.Metrics[0].Value), 10).Decode(&combinedMetrics)
+	err = yaml.NewYAMLOrJSONDecoder(strings.NewReader(spec.Metrics[0].Value), 10).Decode(&combinedMetrics)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
@@ -242,7 +267,7 @@ func getEvaluation(stdin io.Reader) {
 		os.Exit(1)
 	}
 
-	// Marhsal evaluation into JSON
+	// Marshal evaluation into JSON
 	jsonEvaluation, err := json.Marshal(evaluation)
 	if err != nil {
 		log.Fatal(err)

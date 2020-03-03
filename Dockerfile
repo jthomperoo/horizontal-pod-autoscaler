@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Custom Pod Autoscaler alpine base image
-FROM custompodautoscaler/alpine:v0.10.0
+FROM custompodautoscaler/alpine:v0.11.0
 
 # Add in config and horizontal-pod-autoscaler binary
 ADD config.yaml dist/* /
