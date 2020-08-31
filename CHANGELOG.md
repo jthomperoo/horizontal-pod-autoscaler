@@ -5,10 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Update Custom Pod Autoscaler version  to `v1.0.0`.
 
 ## [v0.5.0] - 2020-03-10
 ### Changed
-- Update Custom Pod Autoscaler version to v0.11.0.
+- Update Custom Pod Autoscaler version to `v0.11.0`.
 - Changed `cpuInitializationPeriod`, time now set in seconds rather than minutes.
 - Set default `interval` to be `15000` (15 seconds) to match K8s HPA.
 - Set default `downscaleStabilization` to be `300` (5 minutes) to match K8s HPA.
