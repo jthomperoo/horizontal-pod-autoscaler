@@ -3,14 +3,14 @@
 [![go.dev](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jthomperoo/horizontal-pod-autoscaler)](https://goreportcard.com/report/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![Documentation Status](https://readthedocs.org/projects/predictive-horizontal-pod-autoscaler/badge/?version=latest)](https://predictive-horizontal-pod-autoscaler.readthedocs.io/en/latest)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 # Custom Pod Autoscaler - Horizontal Pod Autoscaler (CPA-HPA)
 
 This is the Horizontal Pod Autoscaler (HPA), modified to work as a [Custom Pod Autoscaler (CPA)](https://github.com/jthomperoo/custom-pod-autoscaler). This project is designed to be a starting point to allow developers to quickly take a working Horizontal Pod Autoscaler and modify it as they need.
 
 ## What is a Custom Pod Autoscaler?
 
-A Custom Pod Autoscaler is a way to write custom logic into Kubernetes scalers.  
+A Custom Pod Autoscaler is a way to write custom logic into Kubernetes scalers.
 For more detailed overview, see the [Custom Pod Autoscaler Framework](https://custom-pod-autoscaler.readthedocs.io/en/latest/).
 
 ## How do I use this project?
@@ -31,7 +31,7 @@ The evaluation stage takes in the metrics gathered by the metric gathering stage
 
 ### Configuration
 
-There is some overlap in functionality between the the CPA and HPA, in this project precedence has been given to the CPA functionality. For example, Kubernetes HPAs have the ability to set minimum and maximum replica counts, this project removes those and instead relies on the CPA minimum and maximum replica counts. A Kubernetes HPA also contains a ScaleTargetRef for deciding which resource to target when scaling; for this project only the ScaleTargetRef of the CPA is used.  
+There is some overlap in functionality between the the CPA and HPA, in this project precedence has been given to the CPA functionality. For example, Kubernetes HPAs have the ability to set minimum and maximum replica counts, this project removes those and instead relies on the CPA minimum and maximum replica counts. A Kubernetes HPA also contains a ScaleTargetRef for deciding which resource to target when scaling; for this project only the ScaleTargetRef of the CPA is used.
 
 Deciding which metrics to use is done by using `MetricSpecs`, which are a key part of HPAs, and look like this:
 ```yaml
@@ -44,7 +44,7 @@ Deciding which metrics to use is done by using `MetricSpecs`, which are a key pa
 ```
 To send these specs to the CPA-HPA, add a config option called `metrics` to the CPA, with a multiline string containing the metric list. For example:
 ```yaml
-config: 
+config:
   - name: metrics
     value: |
       - type: Resource
