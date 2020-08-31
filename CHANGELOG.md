@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v0.6.0] - 2020-08-31
 ### Changed
-- Update Custom Pod Autoscaler version  to `v1.0.0`.
+- Update Custom Pod Autoscaler version to `v1.0.0`.
 
 ## [v0.5.0] - 2020-03-10
 ### Changed
@@ -36,7 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Restructured the Horizontal Pod Autoscaler to work within a Custom Pod Autoscaler.
 
-[Unreleased]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.6.0...HEAD
+[v0.6.0]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/jthomperoo/horizontal-pod-autoscaler/compare/v0.2.0...v0.3.0
