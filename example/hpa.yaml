@@ -29,7 +29,7 @@ rules:
   verbs:
   - '*'
 ---
-apiVersion: custompodautoscaler.com/v1alpha1
+apiVersion: custompodautoscaler.com/v1
 kind: CustomPodAutoscaler
 metadata:
   name: horizontal-pod-autoscaler-example
@@ -44,7 +44,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: php-apache
-  config: 
+  provisionRole: false
+  config:
     - name: minReplicas
       value: "1"
     - name: maxReplicas
