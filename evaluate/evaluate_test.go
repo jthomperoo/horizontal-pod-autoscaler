@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Custom Pod Autoscaler Authors.
+Copyright 2021 The Custom Pod Autoscaler Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	cpaevaluate "github.com/jthomperoo/custom-pod-autoscaler/evaluate"
+	cpaevaluate "github.com/jthomperoo/custom-pod-autoscaler/v2/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate/calculate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate/external"
@@ -106,7 +106,7 @@ func TestGetEvaluation(t *testing.T) {
 			nil,
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: "invalid",
 					},
@@ -126,7 +126,7 @@ func TestGetEvaluation(t *testing.T) {
 			nil,
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ObjectMetricSourceType,
 					},
@@ -150,7 +150,7 @@ func TestGetEvaluation(t *testing.T) {
 			nil,
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ObjectMetricSourceType,
 					},
@@ -174,7 +174,7 @@ func TestGetEvaluation(t *testing.T) {
 			},
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.PodsMetricSourceType,
 					},
@@ -194,7 +194,7 @@ func TestGetEvaluation(t *testing.T) {
 			nil,
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ResourceMetricSourceType,
 					},
@@ -218,7 +218,7 @@ func TestGetEvaluation(t *testing.T) {
 			nil,
 			nil,
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ResourceMetricSourceType,
 					},
@@ -238,7 +238,7 @@ func TestGetEvaluation(t *testing.T) {
 				},
 			},
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ExternalMetricSourceType,
 					},
@@ -262,7 +262,7 @@ func TestGetEvaluation(t *testing.T) {
 				},
 			},
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ExternalMetricSourceType,
 					},
@@ -290,17 +290,17 @@ func TestGetEvaluation(t *testing.T) {
 				},
 			},
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ObjectMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ResourceMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ExternalMetricSourceType,
 					},
@@ -338,22 +338,22 @@ func TestGetEvaluation(t *testing.T) {
 				},
 			},
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ObjectMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ResourceMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.PodsMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ExternalMetricSourceType,
 					},
@@ -395,22 +395,22 @@ func TestGetEvaluation(t *testing.T) {
 				},
 			},
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ObjectMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ResourceMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.PodsMetricSourceType,
 					},
 				},
-				&metric.Metric{
+				{
 					Spec: v2beta2.MetricSpec{
 						Type: v2beta2.ExternalMetricSourceType,
 					},

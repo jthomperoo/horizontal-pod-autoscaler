@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/jthomperoo/horizontal-pod-autoscaler/metric/external"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/fake"
+	"github.com/jthomperoo/horizontal-pod-autoscaler/metric/external"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric/podutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -63,7 +63,7 @@ func TestGetMetric(t *testing.T) {
 			"test-namespace",
 			&metav1.LabelSelector{
 				MatchExpressions: []metav1.LabelSelectorRequirement{
-					metav1.LabelSelectorRequirement{
+					{
 						Operator: "invalid",
 					},
 				},
@@ -173,7 +173,7 @@ func TestGetPerPodMetric(t *testing.T) {
 			"test-namespace",
 			&metav1.LabelSelector{
 				MatchExpressions: []metav1.LabelSelectorRequirement{
-					metav1.LabelSelectorRequirement{
+					{
 						Operator: "invalid",
 					},
 				},

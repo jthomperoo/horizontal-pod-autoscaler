@@ -19,6 +19,8 @@ limitations under the License.
 package podclient
 
 import (
+	"context"
+
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -34,7 +36,7 @@ type OnDemandPodNamespaceLister struct {
 
 // List lists pods that match the selector in the namespace
 func (p *OnDemandPodNamespaceLister) List(selector labels.Selector) ([]*corev1.Pod, error) {
-	pods, err := p.Clientset.CoreV1().Pods(p.Namespace).List(v1.ListOptions{
+	pods, err := p.Clientset.CoreV1().Pods(p.Namespace).List(context.Background(), v1.ListOptions{
 		LabelSelector: selector.String(),
 	})
 	if err != nil {
@@ -49,7 +51,7 @@ func (p *OnDemandPodNamespaceLister) List(selector labels.Selector) ([]*corev1.P
 
 // Get gets a single pod with the name provided in the namespace
 func (p *OnDemandPodNamespaceLister) Get(name string) (*corev1.Pod, error) {
-	pod, err := p.Clientset.CoreV1().Pods(p.Namespace).Get(name, v1.GetOptions{})
+	pod, err := p.Clientset.CoreV1().Pods(p.Namespace).Get(context.Background(), name, v1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +65,7 @@ type OnDemandPodLister struct {
 
 // List lists pods that match the selector across the cluster
 func (p *OnDemandPodLister) List(selector labels.Selector) ([]*corev1.Pod, error) {
-	pods, err := p.Clientset.CoreV1().Pods("").List(v1.ListOptions{
+	pods, err := p.Clientset.CoreV1().Pods("").List(context.Background(), v1.ListOptions{
 		LabelSelector: selector.String(),
 	})
 	if err != nil {

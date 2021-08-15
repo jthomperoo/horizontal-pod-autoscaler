@@ -1,7 +1,7 @@
 package fake
 
 import (
-	"github.com/jthomperoo/custom-pod-autoscaler/evaluate"
+	"github.com/jthomperoo/custom-pod-autoscaler/v2/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric"
 )
 

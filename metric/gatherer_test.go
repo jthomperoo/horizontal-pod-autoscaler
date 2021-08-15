@@ -78,7 +78,7 @@ func TestGetMetrics(t *testing.T) {
 			nil,
 			&appsv1.DaemonSet{},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: "invalid",
 				},
 			},
@@ -98,7 +98,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: "invalid",
 				},
 			},
@@ -118,13 +118,13 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Metric: autoscaling.MetricIdentifier{
 							Selector: &metav1.LabelSelector{
 								MatchExpressions: []metav1.LabelSelectorRequirement{
-									metav1.LabelSelectorRequirement{
+									{
 										Operator: "invalid",
 									},
 								},
@@ -149,7 +149,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -178,7 +178,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -192,7 +192,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single object metric, deployment, value metric, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 1,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ObjectMetricSourceType,
@@ -226,7 +226,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -255,7 +255,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -269,7 +269,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single object metric, statefulset, average value metric, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 3,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ObjectMetricSourceType,
@@ -303,7 +303,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -328,13 +328,13 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
 							Selector: &metav1.LabelSelector{
 								MatchExpressions: []metav1.LabelSelectorRequirement{
-									metav1.LabelSelectorRequirement{
+									{
 										Operator: "invalid",
 									},
 								},
@@ -363,7 +363,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -377,7 +377,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single pods metric, replicationcontroller, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 8,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.PodsMetricSourceType,
@@ -419,7 +419,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -444,7 +444,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -474,7 +474,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -489,7 +489,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single resource metric, average metric, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 9,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ResourceMetricSourceType,
@@ -544,7 +544,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -574,7 +574,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -589,7 +589,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single resource metric, average utilisation, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 9,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ResourceMetricSourceType,
@@ -638,7 +638,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -664,7 +664,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -697,7 +697,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -715,7 +715,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single external metric, average metric, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 2,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ExternalMetricSourceType,
@@ -753,7 +753,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -786,7 +786,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -804,7 +804,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"Single external metric, average utilisation, success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 7,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ExternalMetricSourceType,
@@ -842,7 +842,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -887,7 +887,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -899,7 +899,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -911,7 +911,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -919,7 +919,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -934,7 +934,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"One of each metric, 2 success, 2 invalid",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ExternalMetricSourceType,
@@ -953,7 +953,7 @@ func TestGetMetrics(t *testing.T) {
 						ReadyPodCount: int64Ptr(3),
 					},
 				},
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.PodsMetricSourceType,
@@ -1020,7 +1020,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -1032,7 +1032,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -1044,7 +1044,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -1052,7 +1052,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
@@ -1067,7 +1067,7 @@ func TestGetMetrics(t *testing.T) {
 		{
 			"One of each metric, all success",
 			[]*metric.Metric{
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ExternalMetricSourceType,
@@ -1086,7 +1086,7 @@ func TestGetMetrics(t *testing.T) {
 						ReadyPodCount: int64Ptr(3),
 					},
 				},
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.PodsMetricSourceType,
@@ -1112,7 +1112,7 @@ func TestGetMetrics(t *testing.T) {
 						TotalPods: 5,
 					},
 				},
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ObjectMetricSourceType,
@@ -1127,7 +1127,7 @@ func TestGetMetrics(t *testing.T) {
 						ReadyPodCount: int64Ptr(6),
 					},
 				},
-				&metric.Metric{
+				{
 					CurrentReplicas: 4,
 					Spec: autoscaling.MetricSpec{
 						Type: autoscaling.ResourceMetricSourceType,
@@ -1198,7 +1198,7 @@ func TestGetMetrics(t *testing.T) {
 				},
 			},
 			[]autoscaling.MetricSpec{
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ExternalMetricSourceType,
 					External: &autoscaling.ExternalMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -1210,7 +1210,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.PodsMetricSourceType,
 					Pods: &autoscaling.PodsMetricSource{
 						Metric: autoscaling.MetricIdentifier{
@@ -1222,7 +1222,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ObjectMetricSourceType,
 					Object: &autoscaling.ObjectMetricSource{
 						Target: autoscaling.MetricTarget{
@@ -1230,7 +1230,7 @@ func TestGetMetrics(t *testing.T) {
 						},
 					},
 				},
-				autoscaling.MetricSpec{
+				{
 					Type: autoscaling.ResourceMetricSourceType,
 					Resource: &autoscaling.ResourceMetricSource{
 						Name: "test-resource",
