@@ -71,7 +71,7 @@ type Gather struct {
 // GetMetric retrieves a resource metric
 func (c *Gather) GetMetric(resource corev1.ResourceName, namespace string, selector labels.Selector) (*Metric, error) {
 	// Get metrics
-	metrics, timestamp, err := c.MetricsClient.GetResourceMetric(resource, namespace, selector)
+	metrics, timestamp, err := c.MetricsClient.GetResourceMetric(resource, namespace, selector, "")
 	if err != nil {
 		return nil, fmt.Errorf("unable to get metrics for resource %s: %v", resource, err)
 	}
@@ -111,7 +111,7 @@ func (c *Gather) GetMetric(resource corev1.ResourceName, namespace string, selec
 // GetRawMetric retrieves a a raw resource metric
 func (c *Gather) GetRawMetric(resource corev1.ResourceName, namespace string, selector labels.Selector) (*Metric, error) {
 	// Get metrics
-	metrics, timestamp, err := c.MetricsClient.GetResourceMetric(resource, namespace, selector)
+	metrics, timestamp, err := c.MetricsClient.GetResourceMetric(resource, namespace, selector, "")
 	if err != nil {
 		return nil, fmt.Errorf("unable to get metrics for resource %s: %v", resource, err)
 	}

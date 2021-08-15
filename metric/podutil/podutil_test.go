@@ -91,11 +91,11 @@ func TestPodReadyCount_GetReadyPodsCount(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionTrue,
 											},
@@ -119,11 +119,11 @@ func TestPodReadyCount_GetReadyPodsCount(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionFalse,
 											},
@@ -147,44 +147,44 @@ func TestPodReadyCount_GetReadyPodsCount(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionTrue,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionTrue,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionFalse,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									Status: corev1.PodStatus{
 										Phase: corev1.PodRunning,
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type:   corev1.PodReady,
 												Status: corev1.ConditionFalse,
 											},
@@ -603,10 +603,10 @@ func TestCalculatePodRequests(t *testing.T) {
 			nil,
 			errors.New("missing request for test resource"),
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					Spec: corev1.PodSpec{
 						Containers: []corev1.Container{
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{},
 								},
@@ -624,13 +624,13 @@ func TestCalculatePodRequests(t *testing.T) {
 			},
 			nil,
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: "test-pod",
 					},
 					Spec: corev1.PodSpec{
 						Containers: []corev1.Container{
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{
 										"test resource": *resource.NewMilliQuantity(10, resource.DecimalSI),
@@ -652,13 +652,13 @@ func TestCalculatePodRequests(t *testing.T) {
 			},
 			nil,
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: "test-pod-1",
 					},
 					Spec: corev1.PodSpec{
 						Containers: []corev1.Container{
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{
 										"test resource": *resource.NewMilliQuantity(10, resource.DecimalSI),
@@ -668,13 +668,13 @@ func TestCalculatePodRequests(t *testing.T) {
 						},
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: "test-pod-2",
 					},
 					Spec: corev1.PodSpec{
 						Containers: []corev1.Container{
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{
 										"test resource": *resource.NewMilliQuantity(20, resource.DecimalSI),
@@ -684,20 +684,20 @@ func TestCalculatePodRequests(t *testing.T) {
 						},
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: "test-pod-3",
 					},
 					Spec: corev1.PodSpec{
 						Containers: []corev1.Container{
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{
 										"test resource": *resource.NewMilliQuantity(20, resource.DecimalSI),
 									},
 								},
 							},
-							corev1.Container{
+							{
 								Resources: corev1.ResourceRequirements{
 									Requests: corev1.ResourceList{
 										"test resource": *resource.NewMilliQuantity(5, resource.DecimalSI),

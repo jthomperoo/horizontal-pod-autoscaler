@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The Custom Pod Autoscaler Authors.
+Copyright 2021 The Custom Pod Autoscaler Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import (
 	"strings"
 	"time"
 
-	cpametric "github.com/jthomperoo/custom-pod-autoscaler/metric"
+	cpametric "github.com/jthomperoo/custom-pod-autoscaler/v2/metric"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/podclient"
@@ -66,10 +66,10 @@ const (
 
 // EvaluateSpec represents the information fed to the evaluator
 type EvaluateSpec struct {
-	Metrics              []*cpametric.Metric       `json:"metrics"`
-	UnstructuredResource unstructured.Unstructured `json:"resource"`
-	Resource             metav1.Object             `json:"-"`
-	RunType              string                    `json:"runType"`
+	Metrics              []*cpametric.ResourceMetric `json:"metrics"`
+	UnstructuredResource unstructured.Unstructured   `json:"resource"`
+	Resource             metav1.Object               `json:"-"`
+	RunType              string                      `json:"runType"`
 }
 
 // MetricSpec represents the information fed to the metric gatherer

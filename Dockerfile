@@ -1,4 +1,4 @@
-# Copyright 2020 The Custom Pod Autoscaler Authors.
+# Copyright 2021 The Custom Pod Autoscaler Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Custom Pod Autoscaler alpine base image
-FROM custompodautoscaler/alpine:v1.0.0
+FROM custompodautoscaler/alpine:v2.2.0
 
 # Add in config and horizontal-pod-autoscaler binary
 ADD config.yaml dist/* /

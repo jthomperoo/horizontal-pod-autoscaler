@@ -58,7 +58,7 @@ func TestGetMetric(t *testing.T) {
 			nil,
 			errors.New("unable to get metrics for resource test-metric: fail to get metric"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, errors.New("fail to get metric")
 				},
 			},
@@ -74,7 +74,7 @@ func TestGetMetric(t *testing.T) {
 			nil,
 			errors.New("unable to get pods while calculating replica count: fail to get pods"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, nil
 				},
 			},
@@ -98,7 +98,7 @@ func TestGetMetric(t *testing.T) {
 			nil,
 			errors.New("No pods returned by selector while calculating replica count"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, nil
 				},
 			},
@@ -122,7 +122,7 @@ func TestGetMetric(t *testing.T) {
 			nil,
 			errors.New("missing request for test-metric"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, nil
 				},
 			},
@@ -131,13 +131,13 @@ func TestGetMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "test-pod",
 									},
 									Spec: corev1.PodSpec{
 										Containers: []corev1.Container{
-											corev1.Container{
+											{
 												Name: "invalid-container",
 											},
 										},
@@ -184,7 +184,7 @@ func TestGetMetric(t *testing.T) {
 			},
 			nil,
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return metricsclient.PodMetricsInfo{
 						"ready-pod-1": metricsclient.PodMetric{
 							Value: 1,
@@ -203,13 +203,13 @@ func TestGetMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-1",
 									},
 									Spec: corev1.PodSpec{
 										Containers: []corev1.Container{
-											corev1.Container{
+											{
 												Resources: corev1.ResourceRequirements{
 													Requests: corev1.ResourceList{
 														"test-metric": *k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
@@ -219,22 +219,22 @@ func TestGetMetric(t *testing.T) {
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-2",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-3",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-2",
 									},
@@ -286,7 +286,7 @@ func TestGetMetric(t *testing.T) {
 			},
 			nil,
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return metricsclient.PodMetricsInfo{
 						"ready-pod-1": metricsclient.PodMetric{
 							Value: 1,
@@ -311,13 +311,13 @@ func TestGetMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-1",
 									},
 									Spec: corev1.PodSpec{
 										Containers: []corev1.Container{
-											corev1.Container{
+											{
 												Resources: corev1.ResourceRequirements{
 													Requests: corev1.ResourceList{
 														corev1.ResourceCPU: *k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
@@ -329,54 +329,54 @@ func TestGetMetric(t *testing.T) {
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-2",
 									},
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-3",
 									},
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-2",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ignore-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ignore-pod-2",
 									},
@@ -438,7 +438,7 @@ func TestGetRawMetric(t *testing.T) {
 			nil,
 			errors.New("unable to get metrics for resource test-metric: fail to get metric"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, errors.New("fail to get metric")
 				},
 			},
@@ -454,7 +454,7 @@ func TestGetRawMetric(t *testing.T) {
 			nil,
 			errors.New("unable to get pods while calculating replica count: fail to get pods"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, nil
 				},
 			},
@@ -478,7 +478,7 @@ func TestGetRawMetric(t *testing.T) {
 			nil,
 			errors.New("No pods returned by selector while calculating replica count"),
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return nil, time.Time{}, nil
 				},
 			},
@@ -520,7 +520,7 @@ func TestGetRawMetric(t *testing.T) {
 			},
 			nil,
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return metricsclient.PodMetricsInfo{
 						"ready-pod-1": metricsclient.PodMetric{
 							Value: 1,
@@ -539,13 +539,13 @@ func TestGetRawMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-1",
 									},
 									Spec: corev1.PodSpec{
 										Containers: []corev1.Container{
-											corev1.Container{
+											{
 												Resources: corev1.ResourceRequirements{
 													Requests: corev1.ResourceList{
 														"test-metric": *k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
@@ -555,22 +555,22 @@ func TestGetRawMetric(t *testing.T) {
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-2",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-3",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-2",
 									},
@@ -613,7 +613,7 @@ func TestGetRawMetric(t *testing.T) {
 			},
 			nil,
 			&fake.MetricClient{
-				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector) (metricsclient.PodMetricsInfo, time.Time, error) {
+				GetResourceMetricReactor: func(resource corev1.ResourceName, namespace string, selector labels.Selector, container string) (metricsclient.PodMetricsInfo, time.Time, error) {
 					return metricsclient.PodMetricsInfo{
 						"ready-pod-1": metricsclient.PodMetric{
 							Value: 1,
@@ -638,13 +638,13 @@ func TestGetRawMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*corev1.Pod, err error) {
 							return []*corev1.Pod{
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-1",
 									},
 									Spec: corev1.PodSpec{
 										Containers: []corev1.Container{
-											corev1.Container{
+											{
 												Resources: corev1.ResourceRequirements{
 													Requests: corev1.ResourceList{
 														corev1.ResourceCPU: *k8sresource.NewMilliQuantity(5, k8sresource.DecimalSI),
@@ -656,54 +656,54 @@ func TestGetRawMetric(t *testing.T) {
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-2",
 									},
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-3",
 									},
 									Status: corev1.PodStatus{
 										StartTime: &metav1.Time{},
 										Conditions: []corev1.PodCondition{
-											corev1.PodCondition{
+											{
 												Type: corev1.PodReady,
 											},
 										},
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-2",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ignore-pod-1",
 									},
 								},
-								&corev1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ignore-pod-2",
 									},

@@ -63,7 +63,7 @@ func TestOnDemandPodLister_List(t *testing.T) {
 		{
 			"List 1 pod",
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod",
 						Namespace: "test-namespace",
@@ -82,31 +82,31 @@ func TestOnDemandPodLister_List(t *testing.T) {
 		{
 			"List 3 pods in one namespace, 2 in another",
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-1",
 						Namespace: "test-namespace-1",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-2",
 						Namespace: "test-namespace-1",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-3",
 						Namespace: "test-namespace-1",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-4",
 						Namespace: "test-namespace-2",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-5",
 						Namespace: "test-namespace-2",
@@ -228,7 +228,7 @@ func TestOnDemandPodNamespaceLister_List(t *testing.T) {
 		{
 			"List 1 pod",
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod",
 						Namespace: "test-namespace",
@@ -248,19 +248,19 @@ func TestOnDemandPodNamespaceLister_List(t *testing.T) {
 		{
 			"List 3 pods in requested namespace, 2 in another",
 			[]*corev1.Pod{
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-1",
 						Namespace: "test-namespace-1",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-2",
 						Namespace: "test-namespace-1",
 					},
 				},
-				&corev1.Pod{
+				{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "test-pod-3",
 						Namespace: "test-namespace-1",

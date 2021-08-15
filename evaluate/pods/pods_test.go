@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Custom Pod Autoscaler Authors.
+Copyright 2021 The Custom Pod Autoscaler Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/jthomperoo/custom-pod-autoscaler/evaluate"
+	"github.com/jthomperoo/custom-pod-autoscaler/v2/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate/calculate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate/pods"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/fake"

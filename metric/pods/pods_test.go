@@ -148,27 +148,27 @@ func TestGetMetric(t *testing.T) {
 					return &fake.PodNamespaceLister{
 						ListReactor: func(selector labels.Selector) (ret []*v1.Pod, err error) {
 							return []*v1.Pod{
-								&v1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-1",
 									},
 								},
-								&v1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-2",
 									},
 								},
-								&v1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "ready-pod-3",
 									},
 								},
-								&v1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-1",
 									},
 								},
-								&v1.Pod{
+								{
 									ObjectMeta: metav1.ObjectMeta{
 										Name: "missing-pod-2",
 									},
