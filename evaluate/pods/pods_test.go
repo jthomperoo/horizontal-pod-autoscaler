@@ -56,7 +56,7 @@ func TestGetEvaluation(t *testing.T) {
 				Spec: v2beta2.MetricSpec{
 					Pods: &v2beta2.PodsMetricSource{
 						Target: v2beta2.MetricTarget{
-							Value: resource.NewMilliQuantity(50, resource.DecimalSI),
+							AverageValue: resource.NewMilliQuantity(50, resource.DecimalSI),
 						},
 					},
 				},

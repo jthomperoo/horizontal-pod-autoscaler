@@ -49,7 +49,7 @@ func (e *Evaluate) GetEvaluation(currentReplicas int32, gatheredMetric *metric.M
 		TargetReplicas: e.Calculater.GetPlainMetricReplicaCount(
 			gatheredMetric.Pods.PodMetricsInfo,
 			currentReplicas,
-			gatheredMetric.Spec.Pods.Target.Value.MilliValue(),
+			gatheredMetric.Spec.Pods.Target.AverageValue.MilliValue(),
 			gatheredMetric.Pods.ReadyPodCount,
 			gatheredMetric.Pods.MissingPods,
 			gatheredMetric.Pods.IgnoredPods,
