@@ -21,6 +21,7 @@ import (
 	"testing"
 	"time"
 
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	"github.com/google/go-cmp/cmp"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/fake"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric"
@@ -299,6 +300,54 @@ func TestGetMetrics(t *testing.T) {
 			nil,
 			&appsv1.StatefulSet{
 				Spec: appsv1.StatefulSetSpec{
+					Replicas: int32Ptr(3),
+				},
+			},
+			[]autoscaling.MetricSpec{
+				{
+					Type: autoscaling.ObjectMetricSourceType,
+					Object: &autoscaling.ObjectMetricSource{
+						Target: autoscaling.MetricTarget{
+							Type: autoscaling.AverageValueMetricType,
+						},
+					},
+				},
+			},
+			"test-namespace",
+		},
+		{
+			"Single object metric, argo rollout, average value metric, success",
+			[]*metric.Metric{
+				{
+					CurrentReplicas: 3,
+					Spec: autoscaling.MetricSpec{
+						Type: autoscaling.ObjectMetricSourceType,
+						Object: &autoscaling.ObjectMetricSource{
+							Target: autoscaling.MetricTarget{
+								Type: autoscaling.AverageValueMetricType,
+							},
+						},
+					},
+					Object: &object.Metric{
+						Utilization:   17,
+						ReadyPodCount: int64Ptr(5),
+					},
+				},
+			},
+			nil,
+			nil,
+			&fake.ObjectGatherer{
+				GetPerPodMetricReactor: func(metricName, namespace string, objectRef *autoscaling.CrossVersionObjectReference, metricSelector labels.Selector) (*object.Metric, error) {
+					return &object.Metric{
+						Utilization:   17,
+						ReadyPodCount: int64Ptr(5),
+					}, nil
+				},
+			},
+			nil,
+			nil,
+			&argov1alpha1.Rollout{
+				Spec: argov1alpha1.RolloutSpec{
 					Replicas: int32Ptr(3),
 				},
 			},

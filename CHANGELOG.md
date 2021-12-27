@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Support for `argoproj.io/v1alpha1` `Rollout` resource.
 ### Changed
-- Bump `k8s.io/kubernetes` to `v1.20.7`.
+- Bump `jthomperoo/custom-pod-autoscaler` to `v2.3.0`
+- Bump `k8s.io/kubernetes` to `v1.21.8`.
 ### Fixed
 - **BREAKING CHANGE**, the Pod metric evaluation now correctly looks at the `averageValue` metric target field rather
 than the incorrect `value` target field.

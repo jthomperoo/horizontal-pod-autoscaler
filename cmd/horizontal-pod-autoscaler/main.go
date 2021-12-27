@@ -36,6 +36,7 @@ import (
 	"strings"
 	"time"
 
+	argov1alpha1 "github.com/argoproj/argo-rollouts/pkg/apis/rollouts/v1alpha1"
 	cpametric "github.com/jthomperoo/custom-pod-autoscaler/v2/metric"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/evaluate"
 	"github.com/jthomperoo/horizontal-pod-autoscaler/metric"
@@ -47,7 +48,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/yaml"
 	cacheddiscovery "k8s.io/client-go/discovery/cached"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/kubernetes/scheme"
+	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
 	"k8s.io/kubernetes/pkg/controller/podautoscaler/metrics"
@@ -100,6 +101,18 @@ func main() {
 	}
 }
 
+func getScheme() (*runtime.Scheme, error) {
+	// Set up Kubernetes resource scheme
+	scheme := runtime.NewScheme()
+	schemeBuilder := runtime.NewSchemeBuilder(argov1alpha1.AddToScheme)
+	schemeBuilder.Register(clientsetscheme.AddToScheme)
+	err := schemeBuilder.AddToScheme(scheme)
+	if err != nil {
+		return nil, err
+	}
+	return scheme, nil
+}
+
 func getMetrics(stdin io.Reader) {
 	var spec MetricSpec
 	err := yaml.NewYAMLOrJSONDecoder(stdin, 10).Decode(&spec)
@@ -108,9 +121,16 @@ func getMetrics(stdin io.Reader) {
 		os.Exit(1)
 	}
 
+	scheme, err := getScheme()
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
 	// Create object from version and kind of piped value
 	resourceGVK := spec.UnstructuredResource.GroupVersionKind()
-	resourceRuntime, err := scheme.Scheme.New(resourceGVK)
+
+	resourceRuntime, err := scheme.New(resourceGVK)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
@@ -224,9 +244,15 @@ func getEvaluation(stdin io.Reader) {
 		os.Exit(1)
 	}
 
+	scheme, err := getScheme()
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+
 	// Create object from version and kind of piped value
 	resourceGVK := spec.UnstructuredResource.GroupVersionKind()
-	resourceRuntime, err := scheme.Scheme.New(resourceGVK)
+	resourceRuntime, err := scheme.New(resourceGVK)
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
