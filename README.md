@@ -3,6 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/jthomperoo/horizontal-pod-autoscaler)](https://goreportcard.com/report/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![Documentation Status](https://readthedocs.org/projects/predictive-horizontal-pod-autoscaler/badge/?version=latest)](https://predictive-horizontal-pod-autoscaler.readthedocs.io/en/latest)
 [![License](https://img.shields.io/:license-apache-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
 # Custom Pod Autoscaler - Horizontal Pod Autoscaler (CPA-HPA)
 
 This is the Horizontal Pod Autoscaler (HPA), modified to work as a [Custom Pod Autoscaler
@@ -91,13 +92,13 @@ references](https://horizontal-pod-autoscaler.readthedocs.io/en/latest/).
 ### Environment
 Developing this project requires these dependencies:
 
-* [Go](https://golang.org/doc/install) >= 1.16
-* [Golint](https://github.com/golang/lint) == `v0.0.0-20201208152925-83fdc39ff7b5`
+* [Go](https://golang.org/doc/install) >= 1.17
+* [staticcheck](https://staticcheck.io/docs/getting-started/) == `v0.3.0 (2022.1)`
 * [Docker](https://docs.docker.com/install/)
 
 To view the docs, you need Python 3 installed:
 
-* [Python](https://www.python.org/downloads/) == `3.8.5`
+* [Python](https://www.python.org/downloads/) >= `3.8`
 
 To view docs locally you need some Python dependencies, run:
 
@@ -110,6 +111,7 @@ pip install -r docs/requirements.txt
 * `make` - builds the CPA-HPA binary.
 * `make docker` - builds the CPA-HPA image.
 * `make lint` - lints the code.
-* `make beautify` - beautifies the code.
-* `make vendor_modules` - generates a vendor folder.
+* `make format` - formats the code.
+* `make test` - runs the project tests.
 * `make doc` - hosts the documentation locally, at `127.0.0.1:8000`.
+* `make coverage` - shows the test coverage report.
