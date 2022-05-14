@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/jthomperoo/custom-pod-autoscaler/v2 v2.6.0
-	github.com/jthomperoo/k8shorizmetrics v0.0.0-20220514103340-18085aba1e86
+	github.com/jthomperoo/k8shorizmetrics v1.0.0
 	k8s.io/api v0.24.0
 	k8s.io/apimachinery v0.24.0
 	k8s.io/client-go v0.24.0

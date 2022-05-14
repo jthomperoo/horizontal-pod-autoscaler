@@ -222,6 +222,8 @@ github.com/jthomperoo/custom-pod-autoscaler/v2 v2.6.0 h1:afDx0D8Pr/ZyjqtO7BiWT3n
 github.com/jthomperoo/custom-pod-autoscaler/v2 v2.6.0/go.mod h1:cTmVWYg9huGIhBWj5/UecQUeWGM+DMT/iRe+8ahnZ5A=
 github.com/jthomperoo/k8shorizmetrics v0.0.0-20220514103340-18085aba1e86 h1:dmbf+OjQOUmravAQvf+A3MuoW2+sHQ+WY3k0HWq+p6k=
 github.com/jthomperoo/k8shorizmetrics v0.0.0-20220514103340-18085aba1e86/go.mod h1:2VxR9HlR12zKZqS7exYHcgtSUzPRmaIGZYISKDzgtp8=
+github.com/jthomperoo/k8shorizmetrics v1.0.0 h1:GYAOPSbfE760WGj8ic6PH4IQetFuiXjQJUOPFQMIi5Q=
+github.com/jthomperoo/k8shorizmetrics v1.0.0/go.mod h1:MnIAv05IAb/DxcoyvbBrPTjBIfkQbrcBJfZw+hsg+Zo=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
