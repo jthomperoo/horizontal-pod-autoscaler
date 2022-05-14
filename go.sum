@@ -123,7 +123,6 @@ github.com/go-openapi/swag v0.21.1/go.mod h1:QYRuS/SOXUCsnplDa677K7+DxSOj6IPNl/e
 github.com/gogo/protobuf v1.3.2 h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
-github.com/golang/glog v1.0.0 h1:nfP3RFugxnNRyKgeWd4oI1nYvXpxrx8ck8ZrcizshdQ=
 github.com/golang/glog v1.0.0/go.mod h1:EWib/APOK0SL3dFbYqvxE3UYd8E6s1ouQ7iEp/0LWV4=
 github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20191227052852-215e87163ea7/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
@@ -220,8 +219,6 @@ github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1
 github.com/jstemmer/go-junit-report v0.9.1/go.mod h1:Brl9GWCQeLvo8nXZwPNNblvFj/XSXhF0NWZEnDohbsk=
 github.com/jthomperoo/custom-pod-autoscaler/v2 v2.6.0 h1:afDx0D8Pr/ZyjqtO7BiWT3nSrF2ZqK9pVZkydhIDDns=
 github.com/jthomperoo/custom-pod-autoscaler/v2 v2.6.0/go.mod h1:cTmVWYg9huGIhBWj5/UecQUeWGM+DMT/iRe+8ahnZ5A=
-github.com/jthomperoo/k8shorizmetrics v0.0.0-20220514103340-18085aba1e86 h1:dmbf+OjQOUmravAQvf+A3MuoW2+sHQ+WY3k0HWq+p6k=
-github.com/jthomperoo/k8shorizmetrics v0.0.0-20220514103340-18085aba1e86/go.mod h1:2VxR9HlR12zKZqS7exYHcgtSUzPRmaIGZYISKDzgtp8=
 github.com/jthomperoo/k8shorizmetrics v1.0.0 h1:GYAOPSbfE760WGj8ic6PH4IQetFuiXjQJUOPFQMIi5Q=
 github.com/jthomperoo/k8shorizmetrics v1.0.0/go.mod h1:MnIAv05IAb/DxcoyvbBrPTjBIfkQbrcBJfZw+hsg+Zo=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
