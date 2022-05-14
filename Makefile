@@ -2,21 +2,21 @@ REGISTRY = jthomperoo
 NAME = horizontal-pod-autoscaler
 VERSION = latest
 
-default: vendor_modules
+default:
 	@echo "=============Building============="
-	CGO_ENABLED=0 GOOS=linux go build -mod vendor -o dist/$(NAME) ./cmd/horizontal-pod-autoscaler
+	CGO_ENABLED=0 GOOS=linux go build -o dist/$(NAME) .
 	cp LICENSE dist/LICENSE
 
-unittest: vendor_modules
-	@echo "=============Running unit tests============="
-	go test ./...  -mod=vendor -cover -coverprofile unit_cover.out --tags=unit
+test:
+	@echo "=============Running tests============="
+	go test ./... -cover -coverprofile coverage.out
 
-lint: vendor_modules
+lint:
 	@echo "=============Linting============="
-	go list -mod=vendor ./... | grep -v /vendor/ | xargs -L1 golint -set_exit_status
+	staticcheck ./...
 
-beautify:
-	@echo "=============Beautifying============="
+format:
+	@echo "=============Formatting============="
 	gofmt -s -w .
 	go mod tidy
 
@@ -28,5 +28,6 @@ doc:
 	@echo "=============Serving docs============="
 	mkdocs serve
 
-vendor_modules:
-	go mod vendor
+coverage:
+	@echo "=============Loading coverage HTML============="
+	go tool cover -html=coverage.out

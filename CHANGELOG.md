@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.9.0] - 2022-05-14
+### Changed
+- Bump `jthomperoo/custom-pod-autoscaler` to `v2.6.0`.
+- Extracted all HPA calculations to separate project <https://github.com/jthomperoo/k8shorizmetrics>.
+- Updated Go version to `v1.17`.
+### Removed
+- Removed all public modules from this project, if depending on this instead use <https://github.com/jthomperoo/k8shorizmetrics>.
+
 ## [v0.8.0] - 2021-12-27
 ### Added
 - Support for `argoproj.io/v1alpha1` `Rollout` resource.

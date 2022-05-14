@@ -46,7 +46,9 @@ Operator](https://github.com/jthomperoo/custom-pod-autoscaler-operator/blob/mast
 
 Now your cluster is all set up, with the example application running and the example autoscaler watching it.
 
-3. Use `kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"` to increase the load on the application.
+3. Use
+`kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"`
+to increase the load on the application.
 
 This will increase the load on the application, increasing CPU usage and then causing the autoscaler to scale the
 application up.
