@@ -24,7 +24,6 @@ jobs:
         go install honnef.co/go/tools/cmd/staticcheck@v0.3.0
 
         # Lint and test
-        make vendor_modules
         make lint
         make format
 
