@@ -1,3 +1,7 @@
+> # ARCHIVED AND READ ONLY - This project has been archived and marked as read only, it is no longer maintained.
+> # You can still access the source code and run the examples, but no further code fixes will be made to this project.
+> # Feel free to fork this if you want to continue working on it.
+
 [![Build](https://github.com/jthomperoo/horizontal-pod-autoscaler/workflows/main/badge.svg)](https://github.com/jthomperoo/horizontal-pod-autoscaler/actions)
 [![go.dev](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/jthomperoo/horizontal-pod-autoscaler)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jthomperoo/horizontal-pod-autoscaler)](https://goreportcard.com/report/github.com/jthomperoo/horizontal-pod-autoscaler)
