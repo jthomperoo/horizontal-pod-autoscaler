@@ -7,7 +7,7 @@ You can configure
 Configuration is passed as environment variables, defined in the `CustomPodAutoscaler` YAML. This allows modifying these values at deploy time, and overriding defaults.   
 For example:
 ```yaml
-apiVersion: custompodautoscaler.com/v1alpha1
+apiVersion: custompodautoscaler.com/v1
 kind: CustomPodAutoscaler
 metadata:
   name: horizontal-pod-autoscaler-example
